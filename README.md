@@ -6,6 +6,14 @@
 
 Design and implement a RESTful web service to facilitate a user authentication system. The authentication mechanism should be *token based*. Requests and responses should be in **JSON**.
 
+## Downloading
+
+With Go setup on the local machine you can simply:
+
+```
+$ go get github.com/kylegrantlucas/platform-exercise
+```
+
 ## Usage
 
 ### Migrate
