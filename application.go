@@ -10,19 +10,27 @@ import (
 	"github.com/kylegrantlucas/platform-exercise/handlers/session"
 	"github.com/kylegrantlucas/platform-exercise/handlers/user"
 	"github.com/kylegrantlucas/platform-exercise/pkg/postgres"
+	"github.com/pascaldekloe/jwt"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
 )
 
 func attachHandlers(router *mux.Router) {
+	keys := &jwt.KeyRegister{Secrets: [][]byte{[]byte(os.Getenv("JWT_KEY"))}}
+	headers := map[string]string{
+		"sub": "X-Verified-User-UUID",
+		"em":  "X-Verified-Email",
+		"fn":  "X-Verified-Name",
+	}
+
 	// User Handlers
 	router.HandleFunc("/users", user.Create).Methods("POST")
-	router.HandleFunc("/users", user.Delete).Methods("DELETE")
-	router.HandleFunc("/users", user.Update).Methods("PUT")
+	router.Handle("/users", &jwt.Handler{Target: http.HandlerFunc(user.Delete), HeaderBinding: headers, Keys: keys}).Methods("DELETE")
+	router.HandleFunc("/users", &jwt.Handler{Target: http.HandlerFunc(user.Update), HeaderBinding: headers, Keys: keys}).Methods("PUT")
 
 	// Session Handlers
 	router.HandleFunc("/sessions", session.Create).Methods("POST")
-	router.HandleFunc("/sessions", session.Delete).Methods("DELETE")
+	router.HandleFunc("/sessions", &jwt.Handler{Target: http.HandlerFunc(session.Delete), HeaderBinding: headers, Keys: keys}).Methods("DELETE")
 }
 
 func main() {
