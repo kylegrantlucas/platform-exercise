@@ -3,7 +3,6 @@ module github.com/kylegrantlucas/platform-exercise
 go 1.12
 
 require (
-	github.com/badoux/checkmail v0.0.0-20181210160741-9661bd69e9ad
 	github.com/gorilla/mux v1.7.1
 	github.com/lib/pq v1.0.0
 	github.com/mattevans/pwned-passwords v0.0.0-20180307011435-91729d0e496e

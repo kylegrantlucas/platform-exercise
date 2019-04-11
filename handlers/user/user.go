@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 
-	"github.com/badoux/checkmail"
 	"github.com/kylegrantlucas/platform-exercise/pkg/postgres"
 	hibp "github.com/mattevans/pwned-passwords"
 )
@@ -42,8 +42,8 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check email format validation
-	err = checkmail.ValidateFormat(parsedBody.Email)
-	if err != nil {
+	var rxEmail = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+	if !rxEmail.MatchString(e) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(fmt.Sprintf(`{"message": "Email is invalid, %v"}`, err)))
 		return

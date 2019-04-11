@@ -1,5 +1,3 @@
-# github.com/badoux/checkmail v0.0.0-20181210160741-9661bd69e9ad
-github.com/badoux/checkmail
 # github.com/gorilla/mux v1.7.1
 github.com/gorilla/mux
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
