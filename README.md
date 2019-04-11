@@ -176,11 +176,11 @@ All actions other than Create User and Create Session are JWT protected.
 
 ### Language
 
-I chose to write this service in Golang. It's personally my most used language, and I gets great performance out-of-the-box with minimal fussing around with external packages and frameworks.
+I chose to write this service in Golang. It's personally my most used language, and it gets great performance out-of-the-box with minimal fussing around with external packages and frameworks.
 
 ### Database
 
-This application utilizes Postgres. This comes to great benefit as we can use built in constraints to ensure record completeness, and built in extensions for generating compliant UUIDs.
+This application utilizes Postgres. This comes to great benefit as we can use constraints to ensure record completeness, and built in extensions for generating compliant UUIDs.
 
 ### Libraries
 
