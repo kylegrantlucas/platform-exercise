@@ -28,6 +28,16 @@ $ migrate -source file://db/migrations -database 'postgres://localhost:5432/plat
 $ env PG_HOST=localhost PG_DB_NAME=platform_exercise PG_PORT=5432 JWT_KEY=fenderdigital go run application.go
 ```
 
+### Endpoints
+
+| Endpoint         | Action             |
+|------------------|--------------------|
+| POST /users      | Creates a new user |
+| PUT /users       | Updates a user     |
+| DELETE /users    | Deletes a user     |
+| POST /sessions   | Logins in a user   |
+| DELETE /sessions | Logs out a user    |
+
 ### Example Queries
 
 Create User:
