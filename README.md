@@ -149,7 +149,7 @@ To handle tokening we utilize [JWT](https://jwt.io/introduction/). JWT has the g
 
 ### Protected Endpoint
 
-All actions other than Create User and Create Session are JWT Token protected.
+All actions other than Create User and Create Session are JWT protected.
 
 ### Future Enhancements
 
