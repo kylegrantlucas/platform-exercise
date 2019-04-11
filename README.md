@@ -61,14 +61,19 @@ All actions other than Create User and Create Session are JWT Token protected.
 #### Future Enhancements
 
 * Roles
+
   Currently we only have one role for all users, we could enable permissions on different levels by implementing roles, and JWT tokens will allow us to communicate roles through the token. These can then be stored against the Users table.
 * User Reactivation
+
   Currently once a user account is deleted, that's it. That email can no longer be used. It would be fairly trivial to allow users to reactivate their account at a later date.
 * Email Verification
+
   While it's awesome that emails are validated, in and ideal world we would also send of an email to the user to ensure that they own the inbox.
 * API Key Authentication
+
   Currently registration is open to anyone who would like to POST at it. You could limit this by implmenting an API token system, where users of the system have to register before they can make calls to the API.
 * Rate Limits
+
   There are no rate limits on the API right now, and in order to perform a 401 with a outdated token we need to do at least 1 database call - in theory this could be abused. Some safe rate limits for reasonable usage would revent this attack vector.
 * RSA JWT Encryption
   We could generate an RSA public/private keypair and load the pair into the application via a secret management service to make the tokens more secure.
