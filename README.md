@@ -39,6 +39,8 @@ In order to ensure security of passwords at rest we use the built in golang bcry
 #### Future Enhancements
 
 * Roles
+* Email Authentication
+* User Reactivation
 
 ## Tools Used
 
