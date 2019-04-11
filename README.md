@@ -1,5 +1,7 @@
 # Fender Digital Platform Engineering Challenge
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/be7bdb9338543ecbc2da/maintainability)](https://codeclimate.com/github/kylegrantlucas/platform-exercise/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/be7bdb9338543ecbc2da/test_coverage)](https://codeclimate.com/github/kylegrantlucas/platform-exercise/test_coverage)
+
 ## Description
 
 Design and implement a RESTful web service to facilitate a user authentication system. The authentication mechanism should be *token based*. Requests and responses should be in **JSON**.
