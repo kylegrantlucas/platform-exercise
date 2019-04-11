@@ -43,7 +43,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	// Check email format validation
 	var rxEmail = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
-	if !rxEmail.MatchString(e) {
+	if !rxEmail.MatchString(parsedBody.Email) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(fmt.Sprintf(`{"message": "Email is invalid, %v"}`, err)))
 		return
