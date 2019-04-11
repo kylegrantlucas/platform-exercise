@@ -16,13 +16,13 @@ import (
 
 func attachHandlers(router *mux.Router) {
 	// User Handlers
-	router.HandleFunc("/user/create", user.Create)
-	router.HandleFunc("/user/delete", user.Delete)
-	router.HandleFunc("/user/update", user.Create)
+	router.HandleFunc("/users", user.Create).Methods("POST")
+	router.HandleFunc("/users", user.Delete).Methods("DELETE")
+	router.HandleFunc("/users", user.Update).Methods("PUT")
 
 	// Session Handlers
-	router.HandleFunc("/session/login", session.Create)
-	router.HandleFunc("/session/logout", session.Delete)
+	router.HandleFunc("/sessions", session.Create).Methods("POST")
+	router.HandleFunc("/sessions", session.Delete).Methods("DELETE")
 }
 
 func main() {
