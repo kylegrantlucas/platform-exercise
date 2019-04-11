@@ -33,7 +33,7 @@ $ migrate -source file://db/migrations -database 'postgres://localhost:5432/plat
 ### Run
 
 ```bash
-$ env PG_HOST=localhost PG_DB_NAME=platform_exercise PG_PORT=5432 JWT_KEY=fenderdigital go run application.go
+$ env PG_HOST=localhost PG_DB_NAME=platform_exercise PG_PORT=5432 JWT_KEY=fenderdigital PORT=8081 go run application.go
 ```
 
 ### Endpoints
