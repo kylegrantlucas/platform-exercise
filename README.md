@@ -65,7 +65,7 @@ Create Session (Login):
 
 ```bash
 $ curl -X POST \
-  http://localhost:8081/users \
+  http://localhost:8081/sessions \
   -H 'Content-Type: application/json' \
   -d '{
 	"email": "testing@gmail.com",
@@ -112,7 +112,7 @@ Delete Session:
 
 ```bash
 $ curl -X DELETE \
-  http://localhost:8081/users \
+  http://localhost:8081/sessions \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer <INSERT TOKEN FROM CREATE SESSION HERE>'
 ```
