@@ -42,7 +42,7 @@ Both sessions and user accounts are associated with a UUID. This allows us to en
 
 ### Passwords
 
-In order to ensure security of passwords at rest we use the built in golang bcrypt to hash+salt our passwords. The advantage is that bcrypt provides us with secure salts (generated from crypto/rand) and helper methods for checking an submitted password against the stored hash+salted password.
+In order to ensure security of passwords at rest we use the built in golang `bcrypt` package to hash+salt our passwords. The advantage is that bcrypt provides us with secure salts (generated from `crypto/rand`) and helper methods for checking an submitted password against the stored hash+salted password.
 
 On top of this we require the password to not be present in the HaveIBeenPwned database, making it much hard to crack the encryption by matching external dictionaries, and eliminating weak passwords.
 
