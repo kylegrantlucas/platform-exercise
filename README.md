@@ -52,7 +52,7 @@ When a user submits an email for registration we do a quick regular expression v
 
 ### JWT
 
-To handle tokening we utilize [JWT](https://jwt.io/introduction/). JWT has the great benefit of encoding token expiry and user information entirely within the token itself, removing the need to store and manage the token directly to track it and allowing a client to call the service without any extra metadata (such as a user UUID). Instead to handle expiration we use user "session" that are checked an authenticated with the token, if there was a need to force a user to get a new token, one would simply have to soft delete the session record. Currently these tokens are encoded with `HMAC512` and a `JWT_KEY` set as an environment variable, but if we later wanted to add on extra security it supports encoding with RSA keypairs, which could then be stored in a secure credential management format (ex: Vault).
+To handle tokening we utilize [JWT](https://jwt.io/introduction/). JWT has the great benefit of encoding token expiry and user information entirely within the token itself, removing the need to store and manage the token directly to track it and allowing a client to call the service without any extra metadata (such as a user UUID). Instead to handle expiration we use user "session" that are checked an authenticated with the token, if there was a need to force a user to get a new token, one would simply have to soft delete the session record. Currently these tokens are signed with `HMAC512` and a `JWT_KEY` set as an environment variable, but if we later wanted to add on extra security the library supports encrypting with RSA keypairs, which could then be stored in a secure credential management format (ex: Vault).
 
 ### Protected Endpoint
 
