@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/kylegrantlucas/platform-exercise/models"
@@ -79,19 +80,19 @@ func (d *DatabaseConnection) UpdateUserByUUID(uuid, email, name, plaintextPasswo
 	user := models.User{}
 	var rows *sql.Rows
 
-	queryBody := ""
+	queryBody := []string{}
 	args := []interface{}{}
 	argCount := 0
 
 	if email != "" {
 		argCount++
-		queryBody += fmt.Sprintf("email=$%v, ", argCount)
+		queryBody = append(queryBody, fmt.Sprintf("email=$%v", argCount))
 		args = append(args, email)
 	}
 
 	if name != "" {
 		argCount++
-		queryBody += fmt.Sprintf("name=$%v, ", argCount)
+		queryBody = append(queryBody, fmt.Sprintf("name=$%v", argCount))
 		args = append(args, name)
 	}
 
@@ -103,16 +104,18 @@ func (d *DatabaseConnection) UpdateUserByUUID(uuid, email, name, plaintextPasswo
 			return user, err
 		}
 
-		queryBody += fmt.Sprintf("password=$%v, ", argCount)
+		queryBody = append(queryBody, fmt.Sprintf("password=$%v", argCount))
 		args = append(args, encryptedPassword)
 	}
 
+	queryBodyString := strings.Join(queryBody, ",")
+
 	argCount++
-	queryBody += fmt.Sprintf(" where uuid=$%v", argCount)
+	queryBodyString += fmt.Sprintf(" where uuid=$%v AND deleted_at IS NULL", argCount)
 	args = append(args, uuid)
 
 	// Update the record
-	rows, err := d.Connection.Query(fmt.Sprintf(queries["update_user"], queryBody), args...)
+	rows, err := d.Connection.Query(fmt.Sprintf(queries["update_user_by_uuid"], queryBodyString), args...)
 	if err != nil {
 		return user, err
 	}
@@ -190,7 +193,7 @@ func (d *DatabaseConnection) SoftDeleteUserByUUID(uuid string) (models.User, err
 	user := models.User{}
 
 	// Soft delete the record
-	rows, err := d.Connection.Query(queries["delete_user"], time.Now(), uuid)
+	rows, err := d.Connection.Query(queries["soft_delete_user_by_uuid"], time.Now(), uuid)
 	if err != nil {
 		return user, err
 	}
@@ -238,18 +241,18 @@ func (d *DatabaseConnection) CreateSession(userUUID string, expiresAt time.Time)
 	return session, nil
 }
 
-func (d *DatabaseConnection) GetSessionByUserUUID(userUUID string) (models.Session, error) {
+func (d *DatabaseConnection) GetSessionByUUID(uuid string) (models.Session, error) {
 	session := models.Session{}
 
 	// Query the record
-	rows, err := d.Connection.Query(queries["get_session_by_uuid"], userUUID)
+	rows, err := d.Connection.Query(queries["get_session_by_uuid"], uuid)
 	if err != nil {
 		return session, err
 	}
 
 	// Scan off the result to return to the client
 	for rows.Next() {
-		err := rows.Scan(&session.UUID, &session.UserUUID, &session.CreatedAt, &session.ExpiresAt)
+		err := rows.Scan(&session.UUID, &session.UserUUID, &session.CreatedAt, &session.ExpiresAt, &session.DeletedAt)
 		if err != nil {
 			return session, err
 		}
@@ -285,7 +288,7 @@ var queries = map[string]string{
 	"update_user_by_uuid":         "update users set %v returning uuid, email, name, created_at, updated_at;",
 	"soft_delete_user_by_uuid":    "update users set deleted_at=$1, updated_at=$1 where uuid=$2 returning uuid, email, name, created_at, updated_at, deleted_at;",
 	"soft_delete_session_by_uuid": "update sessions set deleted_at=$1 where uuid=$2 AND deleted_at IS NULL;",
-	"get_session_by_uuid":         "select uuid, user_uuid, created_at, expires_at FROM sessions WHERE uuid=$1 LIMIT 1;",
-	"get_user_by_uuid":            "select uuid, email, name, created_at, updated_at, password FROM users WHERE uuid=$1 LIMIT 1;",
-	"get_user_by_email":           "select uuid, email, name, created_at, updated_at, password FROM users WHERE email=$1 LIMIT 1;",
+	"get_session_by_uuid":         "select uuid, user_uuid, created_at, expires_at, deleted_at FROM sessions WHERE uuid=$1 LIMIT 1;",
+	"get_user_by_uuid":            "select uuid, email, name, created_at, updated_at, password FROM users WHERE uuid=$1 AND deleted_at IS NULL LIMIT 1;",
+	"get_user_by_email":           "select uuid, email, name, created_at, updated_at, password FROM users WHERE email=$1 AND deleted_at IS NULL LIMIT 1;",
 }

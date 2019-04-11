@@ -6,6 +6,8 @@ require (
 	github.com/badoux/checkmail v0.0.0-20181210160741-9661bd69e9ad
 	github.com/gorilla/mux v1.7.1
 	github.com/lib/pq v1.0.0
+	github.com/mattevans/pwned-passwords v0.0.0-20180307011435-91729d0e496e
+	github.com/onsi/gomega v1.5.0 // indirect
 	github.com/pascaldekloe/jwt v1.2.1
 	github.com/sirupsen/logrus v1.4.1
 	github.com/urfave/negroni v1.0.0

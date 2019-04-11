@@ -14,6 +14,7 @@ import (
 	"github.com/kylegrantlucas/platform-exercise/pkg/postgres"
 )
 
+// Create is a handler that creates a new user session
 func Create(w http.ResponseWriter, r *http.Request) {
 	rawBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -68,6 +69,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf(`{"token": "%v"}`, string(token))))
 }
 
+// Delete is a handler that deletes the session by the UUID in the JWT token
 func Delete(w http.ResponseWriter, r *http.Request) {
 	_, err := postgres.DB.SoftDeleteSessionByUUID(r.Header["X-Verified-Session-Uuid"][0])
 	if err != nil {

@@ -7,6 +7,8 @@ github.com/konsorten/go-windows-terminal-sequences
 # github.com/lib/pq v1.0.0
 github.com/lib/pq
 github.com/lib/pq/oid
+# github.com/mattevans/pwned-passwords v0.0.0-20180307011435-91729d0e496e
+github.com/mattevans/pwned-passwords
 # github.com/pascaldekloe/jwt v1.2.1
 github.com/pascaldekloe/jwt
 # github.com/sirupsen/logrus v1.4.1
