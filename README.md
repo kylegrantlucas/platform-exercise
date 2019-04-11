@@ -40,11 +40,13 @@ When a user submits an email for registration, we do a quick SMTP check against 
 
 #### JWT
 
+To handle tokening we utilize [JWT](). JWT has the great benefit of encoding token expiry and user information entirely within the token itself, removing the need to store and manage the token directly to track it and allowing a client to call the service without any extra metadata (such as a user UUID). Instead to handle expiration we use user "session" that are checked an authenticated with the token, if there was a need to force a user to get a new token, one would simply have to soft delete the session record. Currently these tokens are encoded with a `JWT_KEY` set as an environment variable, but if we later wanted to add on extra security it supports encoding with RSA keypairs, which could then be stored in a secure credential management format (ex: Vault).
+
 #### Future Enhancements
 
 * Roles
 * User Reactivation
-* Email Verfication
+* Email Verification
   While it's awesome that emails are SMTP checked, in and ideal world we would also send of an email to the user to ensure that they own the inbox.
 * API Key Authentication
 
@@ -60,6 +62,8 @@ When a user submits an email for registration, we do a quick SMTP check against 
 * negroni - A middleware for HTTP requests, allows us to log each request handler easily and recover from panics without crashing
 * logrus - A better logger for go
 * pq - A pure-go postgres driver, used as the backing driver for sql.DB
+* checkmail - A library for SMTP validating email existence
+* jwt - A library providing a full JWT implementation with fun things like parsing to headers
 
 ## Requirements
 

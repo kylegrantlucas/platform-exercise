@@ -18,10 +18,11 @@ import (
 func attachHandlers(router *mux.Router) {
 	keys := &jwt.KeyRegister{Secrets: [][]byte{[]byte(os.Getenv("JWT_KEY"))}}
 	headers := map[string]string{
-		"sub": "X-Verified-User-UUID",
-		"em":  "X-Verified-Email",
-		"fn":  "X-Verified-Name",
+		"sub": "X-Verified-User-Uuid",
+		"sid": "X-Verified-Session-Uuid",
 	}
+
+	router.Use(jsonMiddleware)
 
 	// User Handlers
 	router.HandleFunc("/users", user.Create).Methods("POST")
@@ -54,10 +55,19 @@ func main() {
 	if os.Getenv("PORT") != "" {
 		port = os.Getenv("PORT")
 	}
+	log.Printf("now serving traffic on port :%v", port)
 	err = http.ListenAndServe(fmt.Sprintf(":%v", port), n)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// Ensures all requests are Content-Type application/json
+func jsonMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
 }
 
 func setupLogger(recovery *negroni.Recovery) {

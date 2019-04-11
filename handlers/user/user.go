@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 
 	"github.com/badoux/checkmail"
@@ -12,29 +11,24 @@ import (
 )
 
 func Create(w http.ResponseWriter, r *http.Request) {
-	rawBody, err := ioutil.ReadAll(r.Body)
+	parsedBody, err := parseUserRequest(r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	parsedBody := UserRequest{}
-	err = json.Unmarshal(rawBody, &parsedBody)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
+	// Check password
 	if parsedBody.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(`{"message": "Password must be set"}`))
 		return
 	}
 
-	err = checkmail.ValidateHost(parsedBody.Email)
-	if _, ok := err.(checkmail.SmtpError); ok && err != nil {
+	// Check email format validation
+	err = checkmail.ValidateFormat(parsedBody.Email)
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"message": "Email is invalid"}`))
+		w.Write([]byte(fmt.Sprintf(`{"message": "Email is invalid, %v"}`, err)))
 		return
 	}
 
@@ -52,19 +46,70 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = w.Write(response)
-	if err != nil {
-		log.Print("error writing response")
-	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }
 
 func Delete(w http.ResponseWriter, r *http.Request) {
+	user, err := postgres.DB.SoftDeleteUserByUUID(r.Header["X-Verified-User-Uuid"][0])
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf(`{"message": "%v"}`, err)))
+		return
+	}
+
+	response, err := json.Marshal(user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf(`{"message": "%v"}`, err)))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }
 
 func Update(w http.ResponseWriter, r *http.Request) {
+	parsedBody, err := parseUserRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	user, err := postgres.DB.UpdateUserByUUID(r.Header["X-Verified-User-Uuid"][0], parsedBody.Email, parsedBody.Name, parsedBody.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf(`{"message": "%v"}`, err)))
+		return
+	}
+
+	response, err := json.Marshal(user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf(`{"message": "%v"}`, err)))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }
 
-type UserRequest struct {
+func parseUserRequest(r *http.Request) (userRequest, error) {
+	parsedBody := userRequest{}
+	rawBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return parsedBody, err
+	}
+
+	err = json.Unmarshal(rawBody, &parsedBody)
+	if err != nil {
+		return parsedBody, err
+	}
+
+	return parsedBody, nil
+}
+
+type userRequest struct {
 	Email    string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
 	Name     string `json:"name,omitempty"`

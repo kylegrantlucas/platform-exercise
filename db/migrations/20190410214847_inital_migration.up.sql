@@ -11,8 +11,9 @@ create table users (
 );
 
 create table sessions (
+  uuid uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_uuid uuid NOT NULL REFERENCES users (uuid),
   created_at timestamptz NOT NULL,
   expires_at timestamptz NOT NULL,
-  deleted_at timestamptz NOT NULL
+  deleted_at timestamptz
 );

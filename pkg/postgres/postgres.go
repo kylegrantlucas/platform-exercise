@@ -60,7 +60,7 @@ func (d *DatabaseConnection) CreateUser(email, name, plaintextPassword string) (
 
 	// Scan off the result to return to the client
 	for rows.Next() {
-		err := rows.Scan(&user.UUID, &user.Email, &user.Name, &user.CreatedAt)
+		err := rows.Scan(&user.UUID, &user.Email, &user.Name, &user.CreatedAt, &user.UpdatedAt)
 		if err != nil {
 			return user, err
 		}
@@ -134,9 +134,57 @@ func (d *DatabaseConnection) UpdateUserByUUID(uuid, email, name, plaintextPasswo
 	return user, nil
 }
 
-// func (d *DatabaseConnection) GetUserByUUID(uuid string) (models.User, error) {
-// 	return models.User{}, nil
-// }
+func (d *DatabaseConnection) GetUserByEmail(email string) (models.User, error) {
+	user := models.User{}
+
+	// Query the record
+	rows, err := d.Connection.Query(queries["get_user_by_email"], email)
+	if err != nil {
+		return user, err
+	}
+
+	// Scan off the result to return to the client
+	for rows.Next() {
+		err := rows.Scan(&user.UUID, &user.Email, &user.Name, &user.CreatedAt, &user.UpdatedAt, &user.Password)
+		if err != nil {
+			return user, err
+		}
+	}
+
+	// Check to make sure there were no errors during scan
+	err = rows.Err()
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (d *DatabaseConnection) GetUserByUUID(uuid string) (models.User, error) {
+	user := models.User{}
+
+	// Query the record
+	rows, err := d.Connection.Query(queries["get_user_by_uuid"], uuid)
+	if err != nil {
+		return user, err
+	}
+
+	// Scan off the result to return to the client
+	for rows.Next() {
+		err := rows.Scan(&user.UUID, &user.Email, &user.Name, &user.CreatedAt, &user.UpdatedAt, &user.Password)
+		if err != nil {
+			return user, err
+		}
+	}
+
+	// Check to make sure there were no errors during scan
+	err = rows.Err()
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
 
 func (d *DatabaseConnection) SoftDeleteUserByUUID(uuid string) (models.User, error) {
 	user := models.User{}
@@ -165,19 +213,79 @@ func (d *DatabaseConnection) SoftDeleteUserByUUID(uuid string) (models.User, err
 }
 
 func (d *DatabaseConnection) CreateSession(userUUID string, expiresAt time.Time) (models.Session, error) {
-	return models.Session{}, nil
+	session := models.Session{}
+
+	// Insert the record
+	rows, err := d.Connection.Query(queries["create_session"], userUUID, time.Now(), expiresAt)
+	if err != nil {
+		return session, err
+	}
+
+	// Scan off the result to return to the client
+	for rows.Next() {
+		err := rows.Scan(&session.UUID, &session.UserUUID, &session.CreatedAt, &session.ExpiresAt)
+		if err != nil {
+			return session, err
+		}
+	}
+
+	// Check to make sure there were no errors during scan
+	err = rows.Err()
+	if err != nil {
+		return session, err
+	}
+
+	return session, nil
 }
 
 func (d *DatabaseConnection) GetSessionByUserUUID(userUUID string) (models.Session, error) {
-	return models.Session{}, nil
+	session := models.Session{}
+
+	// Query the record
+	rows, err := d.Connection.Query(queries["get_session_by_uuid"], userUUID)
+	if err != nil {
+		return session, err
+	}
+
+	// Scan off the result to return to the client
+	for rows.Next() {
+		err := rows.Scan(&session.UUID, &session.UserUUID, &session.CreatedAt, &session.ExpiresAt)
+		if err != nil {
+			return session, err
+		}
+	}
+
+	// Check to make sure there were no errors during scan
+	err = rows.Err()
+	if err != nil {
+		return session, err
+	}
+
+	return session, nil
+}
+
+func (d *DatabaseConnection) SoftDeleteSessionByUUID(uuid string) (int, error) {
+	// Soft delete the record
+	result, err := d.Connection.Exec(queries["soft_delete_session_by_uuid"], time.Now(), uuid)
+	if err != nil {
+		return 0, err
+	}
+
+	numRows, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(numRows), nil
 }
 
 var queries = map[string]string{
-	"create_user":                      "insert into users (email, name, password, created_at) values ($1, $2, $3, $4) returning uuid, email, name, created_at;",
-	"create_session":                   "insert into sessions (uuid, created_at, expires_at) values ($1, $2, $3) returning uuid, created_at, expires_at;",
-	"update_user_by_uuid":              "update users set %v returning uuid, email, name, created_at, updated_at;",
-	"soft_delete_user_by_uuid":         "update users set deleted_at=$1, updated_at=$1 where uuid=$2 returning uuid, email, name, created_at, updated_at, deleted_at;",
-	"soft_delete_session_by_user_uuid": "update sessions set deleted_at=$1 where user_uuid=$2 returning user_uuid, created_at, expires_at, deleted_at;",
-	"get_session_by_user_uuid":         "select user_uuid, created_at, expires_at WHERE expires_at > $1 AND deleted_at IS NULL LIMIT 1;",
-	// "get_user_by_uuid":        "",
+	"create_user":                 "insert into users (email, name, password, created_at, updated_at) values ($1, $2, $3, $4, $4) returning uuid, email, name, created_at, updated_at;",
+	"create_session":              "insert into sessions (user_uuid, created_at, expires_at) values ($1, $2, $3) returning uuid, user_uuid, created_at, expires_at;",
+	"update_user_by_uuid":         "update users set %v returning uuid, email, name, created_at, updated_at;",
+	"soft_delete_user_by_uuid":    "update users set deleted_at=$1, updated_at=$1 where uuid=$2 returning uuid, email, name, created_at, updated_at, deleted_at;",
+	"soft_delete_session_by_uuid": "update sessions set deleted_at=$1 where uuid=$2 AND deleted_at IS NULL;",
+	"get_session_by_uuid":         "select uuid, user_uuid, created_at, expires_at FROM sessions WHERE uuid=$1 LIMIT 1;",
+	"get_user_by_uuid":            "select uuid, email, name, created_at, updated_at, password FROM users WHERE uuid=$1 LIMIT 1;",
+	"get_user_by_email":           "select uuid, email, name, created_at, updated_at, password FROM users WHERE email=$1 LIMIT 1;",
 }
