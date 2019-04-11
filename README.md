@@ -1,6 +1,6 @@
 # Fender Digital Platform Engineering Challenge
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/be7bdb9338543ecbc2da/maintainability)](https://codeclimate.com/github/kylegrantlucas/platform-exercise/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/be7bdb9338543ecbc2da/test_coverage)](https://codeclimate.com/github/kylegrantlucas/platform-exercise/test_coverage)
+[![CircleCI](https://circleci.com/gh/kylegrantlucas/platform-exercise.svg?style=svg&circle-token=d74ce50f314080d1fdb637db1fcc4a7c7108be64)](https://circleci.com/gh/kylegrantlucas/platform-exercise) [![Maintainability](https://api.codeclimate.com/v1/badges/be7bdb9338543ecbc2da/maintainability)](https://codeclimate.com/github/kylegrantlucas/platform-exercise/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/be7bdb9338543ecbc2da/test_coverage)](https://codeclimate.com/github/kylegrantlucas/platform-exercise/test_coverage)
 
 ## Description
 
