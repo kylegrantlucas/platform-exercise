@@ -295,10 +295,12 @@ func TestDatabaseConnection_GetUserByUUID(t *testing.T) {
 }
 
 func TestDatabaseConnection_SoftDeleteUserByUUID(t *testing.T) {
-	// db, mock, err := sqlmock.New()
-	// if err != nil {
-	// 	t.Fatalf("error building sqlmock: %v", err)
-	// }
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("error building sqlmock: %v", err)
+	}
+
+	currentTime := time.Now()
 
 	type fields struct {
 		Connection *sql.DB
@@ -313,9 +315,26 @@ func TestDatabaseConnection_SoftDeleteUserByUUID(t *testing.T) {
 		want    models.User
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "valid user update",
+			fields: fields{
+				Connection: db,
+			},
+			args: args{
+				uuid: "abc",
+			},
+			want: models.User{
+				UUID:      "abc",
+				Email:     "test@test.com",
+				Name:      "testy testerson",
+				CreatedAt: currentTime,
+				UpdatedAt: currentTime,
+				DeletedAt: &currentTime,
+			},
+		},
 	}
 	for _, tt := range tests {
+		mock.ExpectQuery(regexp.QuoteMeta(queries["soft_delete_user_by_uuid"])).WillReturnRows(sqlmock.NewRows([]string{"uuid", "email", "name", "created_at", "updated_at", "deleted_at"}).AddRow("abc", "test@test.com", "testy testerson", currentTime, currentTime, currentTime))
 		t.Run(tt.name, func(t *testing.T) {
 			d := &DatabaseConnection{
 				Connection: tt.fields.Connection,
@@ -333,10 +352,12 @@ func TestDatabaseConnection_SoftDeleteUserByUUID(t *testing.T) {
 }
 
 func TestDatabaseConnection_CreateSession(t *testing.T) {
-	// db, mock, err := sqlmock.New()
-	// if err != nil {
-	// 	t.Fatalf("error building sqlmock: %v", err)
-	// }
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("error building sqlmock: %v", err)
+	}
+
+	currentTime := time.Now()
 
 	type fields struct {
 		Connection *sql.DB
@@ -352,9 +373,25 @@ func TestDatabaseConnection_CreateSession(t *testing.T) {
 		want    models.Session
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "valid user update",
+			fields: fields{
+				Connection: db,
+			},
+			args: args{
+				userUUID:  "abc",
+				expiresAt: currentTime,
+			},
+			want: models.Session{
+				UUID:      "abc",
+				UserUUID:  "abc",
+				CreatedAt: currentTime,
+				ExpiresAt: currentTime,
+			},
+		},
 	}
 	for _, tt := range tests {
+		mock.ExpectQuery(regexp.QuoteMeta(queries["create_session"])).WillReturnRows(sqlmock.NewRows([]string{"uuid", "user_uuid", "created_at", "expires_at"}).AddRow("abc", "abc", currentTime, currentTime))
 		t.Run(tt.name, func(t *testing.T) {
 			d := &DatabaseConnection{
 				Connection: tt.fields.Connection,
@@ -372,10 +409,12 @@ func TestDatabaseConnection_CreateSession(t *testing.T) {
 }
 
 func TestDatabaseConnection_GetSessionByUUID(t *testing.T) {
-	// db, mock, err := sqlmock.New()
-	// if err != nil {
-	// 	t.Fatalf("error building sqlmock: %v", err)
-	// }
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("error building sqlmock: %v", err)
+	}
+
+	currentTime := time.Now()
 
 	type fields struct {
 		Connection *sql.DB
@@ -390,9 +429,25 @@ func TestDatabaseConnection_GetSessionByUUID(t *testing.T) {
 		want    models.Session
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "valid user update",
+			fields: fields{
+				Connection: db,
+			},
+			args: args{
+				uuid: "abc",
+			},
+			want: models.Session{
+				UUID:      "abc",
+				UserUUID:  "abc",
+				CreatedAt: currentTime,
+				ExpiresAt: currentTime,
+				DeletedAt: &currentTime,
+			},
+		},
 	}
 	for _, tt := range tests {
+		mock.ExpectQuery(regexp.QuoteMeta(queries["get_session_by_uuid"])).WillReturnRows(sqlmock.NewRows([]string{"uuid", "user_uuid", "created_at", "expires_at", "deleted_at"}).AddRow("abc", "abc", currentTime, currentTime, currentTime))
 		t.Run(tt.name, func(t *testing.T) {
 			d := &DatabaseConnection{
 				Connection: tt.fields.Connection,
@@ -410,10 +465,10 @@ func TestDatabaseConnection_GetSessionByUUID(t *testing.T) {
 }
 
 func TestDatabaseConnection_SoftDeleteSessionByUUID(t *testing.T) {
-	// db, mock, err := sqlmock.New()
-	// if err != nil {
-	// 	t.Fatalf("error building sqlmock: %v", err)
-	// }
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("error building sqlmock: %v", err)
+	}
 
 	type fields struct {
 		Connection *sql.DB
@@ -428,9 +483,19 @@ func TestDatabaseConnection_SoftDeleteSessionByUUID(t *testing.T) {
 		want    int
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "valid session delete",
+			fields: fields{
+				Connection: db,
+			},
+			args: args{
+				uuid: "abc",
+			},
+			want: 1,
+		},
 	}
 	for _, tt := range tests {
+		mock.ExpectExec(regexp.QuoteMeta(queries["soft_delete_session_by_uuid"])).WillReturnResult(sqlmock.NewResult(1, 1))
 		t.Run(tt.name, func(t *testing.T) {
 			d := &DatabaseConnection{
 				Connection: tt.fields.Connection,
