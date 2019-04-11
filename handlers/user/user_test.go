@@ -20,7 +20,7 @@ func TestCreate(t *testing.T) {
 			name: "test success",
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("GET", "/liveness", nil),
+				r: httptest.NewRequest("POST", "/users", nil),
 			},
 		},
 	}
