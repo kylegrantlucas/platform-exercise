@@ -1,6 +1,7 @@
 package user
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -68,8 +69,9 @@ func TestDelete(t *testing.T) {
 func TestUpdate(t *testing.T) {
 	postgres.DB = &postgres.DBMock{}
 
-	r := httptest.NewRequest("POST", "/sessions", nil)
+	r := httptest.NewRequest("POST", "/sessions", bytes.NewReader([]byte(`{"email": "test", "password": "9X&5eQ#TI9IzBM", "name": "Testers"}`)))
 	r.Header.Add("X-Verified-User-Uuid", "abc")
+	r.Header.Add("X-Verified-Session-Uuid", "abc")
 
 	type args struct {
 		w http.ResponseWriter
