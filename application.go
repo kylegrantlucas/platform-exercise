@@ -26,11 +26,11 @@ func attachHandlers(router *mux.Router) {
 	// User Handlers
 	router.HandleFunc("/users", user.Create).Methods("POST")
 	router.Handle("/users", &jwt.Handler{Target: http.HandlerFunc(user.Delete), HeaderBinding: headers, Keys: keys}).Methods("DELETE")
-	router.HandleFunc("/users", &jwt.Handler{Target: http.HandlerFunc(user.Update), HeaderBinding: headers, Keys: keys}).Methods("PUT")
+	router.Handle("/users", &jwt.Handler{Target: http.HandlerFunc(user.Update), HeaderBinding: headers, Keys: keys}).Methods("PUT")
 
 	// Session Handlers
 	router.HandleFunc("/sessions", session.Create).Methods("POST")
-	router.HandleFunc("/sessions", &jwt.Handler{Target: http.HandlerFunc(session.Delete), HeaderBinding: headers, Keys: keys}).Methods("DELETE")
+	router.Handle("/sessions", &jwt.Handler{Target: http.HandlerFunc(session.Delete), HeaderBinding: headers, Keys: keys}).Methods("DELETE")
 }
 
 func main() {
