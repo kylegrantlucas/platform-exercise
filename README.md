@@ -58,7 +58,7 @@ To handle tokening we utilize [JWT](https://jwt.io/introduction/). JWT has the g
 
 All actions other than Create User and Create Session are JWT Token protected.
 
-#### Future Enhancements
+### Future Enhancements
 
 * Roles
 
@@ -98,6 +98,7 @@ This application utilizes Postgres. This comes to great benefit as we can use bu
 * [pq](https://github.com/lib/pq) - A pure-go postgres driver, used as the backing driver for sql.DB
 * [jwt](https://github.com/pascaldekloe/jwt/) - A library providing a full JWT implementation with fun things like parsing to headers
 * [pwned-passwords](https://github.com/mattevans/pwned-passwords) - A go library for checking against the HaveIBeenPwned database
+* [sqlmock](https://github.com/DATA-DOG/go-sqlmock) An awesome library for mocking SQL request for testing the persistence layer
 
 ## Requirements
 
