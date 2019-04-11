@@ -30,6 +30,75 @@ $ env PG_HOST=localhost PG_DB_NAME=platform_exercise PG_PORT=5432 JWT_KEY=fender
 
 ### Example Queries
 
+Create User:
+
+```bash
+$ curl -X POST \
+  http://localhost:8081/users \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"email": "testing@gmail.com",
+	"name": "Tesy McTesterson",
+	"password": "9X&5eQ#TI9IzBM"
+}'
+```
+
+Create Session (Login):
+
+```bash
+$ curl -X POST \
+  http://localhost:8081/users \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"email": "testing@gmail.com",
+	"password": "9X&5eQ#TI9IzBM"
+}'
+```
+
+Update User:
+
+```bash
+$ curl -X PUT \
+  http://localhost:8081/users \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <INSERT TOKEN FROM CREATE SESSION HERE>' \
+  -d '{
+	"email": "testing@gmail.com",
+	"name": "Testy Got-Married"
+}'
+```
+
+Update User (This time, with passwords!):
+
+```bash
+$ curl -X PUT \
+  http://localhost:8081/users \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <INSERT TOKEN FROM CREATE SESSION HERE>' \
+  -d '{
+	"email": "testing@gmail.com",
+	"password": "9X&5eQ#TI9IzBM"
+}'
+```
+
+Delete User:
+
+```bash
+$ curl -X DELETE \
+  http://localhost:8081/users \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <INSERT TOKEN FROM CREATE SESSION HERE>'
+```
+
+Delete Session:
+
+```bash
+$ curl -X DELETE \
+  http://localhost:8081/users \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <INSERT TOKEN FROM CREATE SESSION HERE>'
+```
+
 ### Test
 
 ```bash
