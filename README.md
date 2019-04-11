@@ -117,6 +117,10 @@ $ go test ./...
 
 ## Thoughts
 
+### Soft Deletes
+
+Accounts and sessions are both only soft deleted, meaning instead of purging the record from the database we set a field called `deleted_at` with a timestamp. This allows us to quickly get metrics on accounts and sessions, and have a living paper trail of the authentication an account has performed.
+
 ### UUID
 
 Both sessions and user accounts are associated with a UUID. This allows us to ensure accuracy when picking records but also allows us a certain level of obfuscation. With UUIDs the token never has to embed user PII in the token directly, and it makes user ID guessing attacks near impossible.
