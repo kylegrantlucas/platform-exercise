@@ -13,5 +13,6 @@ create table users (
 create table sessions (
   user_uuid uuid NOT NULL REFERENCES users (uuid),
   created_at timestamptz NOT NULL,
-  expires_at timestamptz NOT NULL
+  expires_at timestamptz NOT NULL,
+  deleted_at timestamptz NOT NULL
 );
