@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/badoux/checkmail"
 	"github.com/kylegrantlucas/platform-exercise/pkg/postgres"
 )
 
@@ -27,6 +28,13 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	if parsedBody.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(`{"message": "Password must be set"}`))
+		return
+	}
+
+	err = checkmail.ValidateHost(parsedBody.Email)
+	if _, ok := err.(checkmail.SmtpError); ok && err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{"message": "Email is invalid"}`))
 		return
 	}
 

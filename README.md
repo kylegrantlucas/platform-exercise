@@ -32,15 +32,21 @@ This application uses [golang-migrate](https://github.com/golang-migrate/migrate
 
 #### Passwords
 
-In order to ensure security of passwords at rest we use the built in golang bcrypt to hash+salt our passwords. The advantage is that bcrypt provides us with secure salts (generated from crypto/rand) and helper methods for checking an inputted password against the stored hash+salted password.
+In order to ensure security of passwords at rest we use the built in golang bcrypt to hash+salt our passwords. The advantage is that bcrypt provides us with secure salts (generated from crypto/rand) and helper methods for checking an submitted password against the stored hash+salted password.
+
+#### Email Validation
+
+When a user submits an email for registration, we do a quick SMTP check against the address to ensure it is a real valid address, this saves us from having to rely on a regular expression for email validation (https://davidcel.is/posts/stop-validating-email-addresses-with-regex/).
 
 #### JWT
 
 #### Future Enhancements
 
 * Roles
-* Email Authentication
 * User Reactivation
+* Email Verfication
+  While it's awesome that emails are SMTP checked, in and ideal world we would also send of an email to the user to ensure that they own the inbox.
+* API Key Authentication
 
 ## Tools Used
 

@@ -1,3 +1,5 @@
+# github.com/badoux/checkmail v0.0.0-20181210160741-9661bd69e9ad
+github.com/badoux/checkmail
 # github.com/gorilla/mux v1.7.1
 github.com/gorilla/mux
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
@@ -9,5 +11,8 @@ github.com/lib/pq/oid
 github.com/sirupsen/logrus
 # github.com/urfave/negroni v1.0.0
 github.com/urfave/negroni
-# golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33
+# golang.org/x/crypto v0.0.0-20190404164418-38d8ce5564a5
+golang.org/x/crypto/bcrypt
+golang.org/x/crypto/blowfish
+# golang.org/x/sys v0.0.0-20190403152447-81d4e9dc473e
 golang.org/x/sys/unix
