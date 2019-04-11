@@ -76,6 +76,7 @@ All actions other than Create User and Create Session are JWT Token protected.
 
   There are no rate limits on the API right now, and in order to perform a 401 with a outdated token we need to do at least 1 database call - in theory this could be abused. Some safe rate limits for reasonable usage would revent this attack vector.
 * RSA JWT Encryption
+
   We could generate an RSA public/private keypair and load the pair into the application via a secret management service to make the tokens more secure.
 
 ## Tools Used
