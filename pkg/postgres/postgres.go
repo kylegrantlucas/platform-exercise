@@ -17,7 +17,18 @@ type DatabaseConnection struct {
 	Connection *sql.DB
 }
 
-var DB *DatabaseConnection
+type Databaser interface {
+	CreateUser(email, name, plaintextPassword string) (models.User, error)
+	UpdateUserByUUID(uuid, email, name, plaintextPassword string) (models.User, error)
+	GetUserByEmail(email string) (models.User, error)
+	GetUserByUUID(uuid string) (models.User, error)
+	SoftDeleteUserByUUID(uuid string) (models.User, error)
+	CreateSession(userUUID string, expiresAt time.Time) (models.Session, error)
+	GetSessionByUUID(uuid string) (models.Session, error)
+	SoftDeleteSessionByUUID(uuid string) (int, error)
+}
+
+var DB Databaser
 
 func CreateDatabase(host, port, user, password, dbName string) (*DatabaseConnection, error) {
 	sqlURL := url.URL{
@@ -291,4 +302,39 @@ var queries = map[string]string{
 	"get_session_by_uuid":         "select uuid, user_uuid, created_at, expires_at, deleted_at FROM sessions WHERE uuid=$1 LIMIT 1;",
 	"get_user_by_uuid":            "select uuid, email, name, created_at, updated_at, password FROM users WHERE uuid=$1 AND deleted_at IS NULL LIMIT 1;",
 	"get_user_by_email":           "select uuid, email, name, created_at, updated_at, password FROM users WHERE email=$1 AND deleted_at IS NULL LIMIT 1;",
+}
+
+type DBMock struct{}
+
+func (d *DBMock) CreateUser(email, name, plaintextPassword string) (models.User, error) {
+	return models.User{Email: "test@test.com", Name: "Testy McTesterson", UUID: "abc"}, nil
+}
+
+func (d *DBMock) UpdateUserByUUID(uuid, email, name, plaintextPassword string) (models.User, error) {
+	return models.User{Email: "test@test.com", Name: "Testy McTesterson", UUID: "abc"}, nil
+}
+
+func (d *DBMock) SoftDeleteUserByUUID(uuid string) (models.User, error) {
+	ct := time.Now()
+	return models.User{Email: "test@test.com", Name: "Testy McTesterson", UUID: "abc", DeletedAt: &ct}, nil
+}
+
+func (d *DBMock) GetUserByUUID(uuid string) (models.User, error) {
+	return models.User{Email: "test@test.com", Name: "Testy McTesterson", UUID: "abc"}, nil
+}
+
+func (d *DBMock) GetUserByEmail(email string) (models.User, error) {
+	return models.User{Email: "test@test.com", Name: "Testy McTesterson", UUID: "abc"}, nil
+}
+
+func (d *DBMock) CreateSession(userUUID string, expiresAt time.Time) (models.Session, error) {
+	return models.Session{UUID: "abc"}, nil
+}
+
+func (d *DBMock) GetSessionByUUID(uuid string) (models.Session, error) {
+	return models.Session{UUID: "abc"}, nil
+}
+
+func (d *DBMock) SoftDeleteSessionByUUID(uuid string) (int, error) {
+	return 1, nil
 }

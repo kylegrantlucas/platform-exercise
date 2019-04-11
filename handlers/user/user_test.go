@@ -5,9 +5,13 @@ import (
 	"net/http/httptest"
 	"reflect"
 	"testing"
+
+	"github.com/kylegrantlucas/platform-exercise/pkg/postgres"
 )
 
 func TestCreate(t *testing.T) {
+	postgres.DB = &postgres.DBMock{}
+
 	type args struct {
 		w http.ResponseWriter
 		r *http.Request
@@ -32,6 +36,12 @@ func TestCreate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
+	postgres.DB = &postgres.DBMock{}
+
+	r := httptest.NewRequest("POST", "/sessions", nil)
+	r.Header.Add("X-Verified-User-Uuid", "abc")
+	r.Header.Add("X-Verified-Session-Uuid", "abc")
+
 	type args struct {
 		w http.ResponseWriter
 		r *http.Request
@@ -40,7 +50,13 @@ func TestDelete(t *testing.T) {
 		name string
 		args args
 	}{
-		// TODO: Add test cases.
+		{
+			name: "test success",
+			args: args{
+				w: httptest.NewRecorder(),
+				r: r,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -50,6 +66,11 @@ func TestDelete(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
+	postgres.DB = &postgres.DBMock{}
+
+	r := httptest.NewRequest("POST", "/sessions", nil)
+	r.Header.Add("X-Verified-User-Uuid", "abc")
+
 	type args struct {
 		w http.ResponseWriter
 		r *http.Request
@@ -58,7 +79,13 @@ func TestUpdate(t *testing.T) {
 		name string
 		args args
 	}{
-		// TODO: Add test cases.
+		{
+			name: "test success",
+			args: args{
+				w: httptest.NewRecorder(),
+				r: r,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
