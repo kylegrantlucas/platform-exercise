@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type User struct {
 	UUID      string    `json:"uuid,omitempty"`
@@ -10,4 +13,11 @@ type User struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	DeletedAt time.Time `json:"deleted_at,omitempty"`
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
+}
+
+// MarshalJSON is a custom marshaler for the User struct that strips the password before marshaling
+func (u *User) MarshalJSON() ([]byte, error) {
+	userWithoutPassword := *u
+	userWithoutPassword.Password = ""
+	return json.Marshal(userWithoutPassword)
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kylegrantlucas/platform-exercise/handlers/session"
 	"github.com/kylegrantlucas/platform-exercise/handlers/user"
-	"github.com/kylegrantlucas/platform-exercise/services/postgres"
+	"github.com/kylegrantlucas/platform-exercise/pkg/postgres"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
 )

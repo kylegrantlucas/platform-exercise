@@ -14,7 +14,7 @@ This application uses [golang-migrate](https://github.com/golang-migrate/migrate
 
 `psql -c 'create database platform_exercise'`
 
-`migrate -source file://db/migrations -database postgres://localhost:5432/platform_exercise?sslmode=disable up`
+`migrate -source file://db/migrations -database 'postgres://localhost:5432/platform_exercise?sslmode=disable' up`
 
 ### Run
 
@@ -36,7 +36,17 @@ In order to ensure security of passwords at rest we use the built in golang bcry
 
 #### JWT
 
-## Libraries Used
+#### Future Enhancements
+
+* Roles
+
+## Tools Used
+
+### Language
+
+### Database
+
+### Libraries
 
 * [golang-migrate](https://github.com/golang-migrate/migrate) - A tool for running raw sql migrations.
 * negroni - A middleware for HTTP requests, allows us to log each request handler easily and recover from panics without crashing
@@ -83,4 +93,3 @@ Please include:
 - Do as little or as much as you like.
 
 Please fork this repo and commit your code into that fork.  Show your work and process through those commits.
-
