@@ -13,11 +13,12 @@ Design and implement a RESTful web service to facilitate a user authentication s
 This application uses [golang-migrate](https://github.com/golang-migrate/migrate) to handle running migrations, you can find
 
 `psql -c 'create database platform_exercise'`
+
 `migrate -source file://db/migrations -database postgres://localhost:5432/platform_exercise?sslmode=disable up`
 
 ### Run
 
-`env PG_HOST=localhost PG_DB_NAME=platform_exercise PG_PORT=5432 go run application.go`
+`env PG_HOST=localhost PG_DB_NAME=platform_exercise PG_PORT=5432 JWT_KEY=fenderdigital go run application.go`
 
 ### Example Queries
 
@@ -26,6 +27,14 @@ This application uses [golang-migrate](https://github.com/golang-migrate/migrate
 `go test ./...`
 
 ## Thoughts
+
+### Security
+
+#### Passwords
+
+In order to ensure security of passwords at rest we use the built in golang bcrypt to hash+salt our passwords. The advantage is that bcrypt provides us with secure salts (generated from crypto/rand) and helper methods for checking an inputted password against the stored hash+salted password.
+
+#### JWT
 
 ## Libraries Used
 
