@@ -25,7 +25,7 @@ func TestCreate(t *testing.T) {
 			name: "test success",
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("POST", "/users", nil),
+				r: httptest.NewRequest("POST", "/users", bytes.NewReader([]byte(`{"email": "test@gmail.com", "password": "9X&5eQ#TI9IzBM", "name": "Testers"}`))),
 			},
 		},
 	}
@@ -39,7 +39,7 @@ func TestCreate(t *testing.T) {
 func TestDelete(t *testing.T) {
 	postgres.DB = &postgres.DBMock{}
 
-	r := httptest.NewRequest("POST", "/sessions", nil)
+	r := httptest.NewRequest("DELETE", "/users", nil)
 	r.Header.Add("X-Verified-User-Uuid", "abc")
 	r.Header.Add("X-Verified-Session-Uuid", "abc")
 
@@ -69,7 +69,7 @@ func TestDelete(t *testing.T) {
 func TestUpdate(t *testing.T) {
 	postgres.DB = &postgres.DBMock{}
 
-	r := httptest.NewRequest("POST", "/sessions", bytes.NewReader([]byte(`{"email": "test", "password": "9X&5eQ#TI9IzBM", "name": "Testers"}`)))
+	r := httptest.NewRequest("PUT", "/users", bytes.NewReader([]byte(`{"email": "test@gmail.com", "password": "9X&5eQ#TI9IzBM", "name": "Testers"}`)))
 	r.Header.Add("X-Verified-User-Uuid", "abc")
 	r.Header.Add("X-Verified-Session-Uuid", "abc")
 

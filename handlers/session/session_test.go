@@ -1,6 +1,7 @@
 package session
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,6 +10,8 @@ import (
 )
 
 func TestCreate(t *testing.T) {
+	postgres.DB = &postgres.DBMock{}
+
 	type args struct {
 		w http.ResponseWriter
 		r *http.Request
@@ -21,7 +24,7 @@ func TestCreate(t *testing.T) {
 			name: "test success",
 			args: args{
 				w: httptest.NewRecorder(),
-				r: httptest.NewRequest("POST", "/sessions", nil),
+				r: httptest.NewRequest("POST", "/sessions", bytes.NewReader([]byte(`{"email": "test@gmail.com", "password": "test"}`))),
 			},
 		},
 	}
@@ -35,7 +38,7 @@ func TestCreate(t *testing.T) {
 func TestDelete(t *testing.T) {
 	postgres.DB = &postgres.DBMock{}
 
-	r := httptest.NewRequest("POST", "/sessions", nil)
+	r := httptest.NewRequest("DELETE", "/sessions", nil)
 	r.Header.Add("X-Verified-Session-Uuid", "abc")
 
 	type args struct {

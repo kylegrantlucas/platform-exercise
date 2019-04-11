@@ -134,6 +134,16 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if parsedBody.Email != "" {
+		// Check email format validation
+		var rxEmail = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+		if !rxEmail.MatchString(parsedBody.Email) {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(fmt.Sprintf(`{"message": "Email is invalid, %v"}`, err)))
+			return
+		}
+	}
+
 	user, err := postgres.DB.UpdateUserByUUID(r.Header["X-Verified-User-Uuid"][0], parsedBody.Email, parsedBody.Name, parsedBody.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

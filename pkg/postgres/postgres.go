@@ -324,7 +324,8 @@ func (d *DBMock) GetUserByUUID(uuid string) (models.User, error) {
 }
 
 func (d *DBMock) GetUserByEmail(email string) (models.User, error) {
-	return models.User{Email: "test@test.com", Name: "Testy McTesterson", UUID: "abc"}, nil
+	test, _ := password.HashAndSalt("test")
+	return models.User{Email: "test@test.com", Name: "Testy McTesterson", UUID: "abc", Password: test}, nil
 }
 
 func (d *DBMock) CreateSession(userUUID string, expiresAt time.Time) (models.Session, error) {
