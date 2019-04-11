@@ -2,6 +2,7 @@ package user
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"reflect"
 	"testing"
 )
@@ -15,7 +16,13 @@ func TestCreate(t *testing.T) {
 		name string
 		args args
 	}{
-		// TODO: Add test cases.
+		{
+			name: "test success",
+			args: args{
+				w: httptest.NewRecorder(),
+				r: httptest.NewRequest("GET", "/liveness", nil),
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

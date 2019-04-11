@@ -2,6 +2,7 @@ package session
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -14,7 +15,13 @@ func TestCreate(t *testing.T) {
 		name string
 		args args
 	}{
-		// TODO: Add test cases.
+		{
+			name: "test success",
+			args: args{
+				w: httptest.NewRecorder(),
+				r: httptest.NewRequest("GET", "/liveness", nil),
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -31,9 +38,7 @@ func TestDelete(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			Delete(tt.args.w, tt.args.r)
