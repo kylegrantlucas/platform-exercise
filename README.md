@@ -10,21 +10,29 @@ Design and implement a RESTful web service to facilitate a user authentication s
 
 (These steps will assume there is a local instance of Postgres running, a guide for Postgres on MacOS can be found [here](https://www.codementor.io/engineerapart/getting-started-with-postgresql-on-mac-osx-are8jcopb#3-configuring-postgres))
 
-This application uses [golang-migrate](https://github.com/golang-migrate/migrate) to handle running migrations, you can find install instructions [here](https://github.com/golang-migrate/migrate/tree/master/cli)
+This application uses [golang-migrate](https://github.com/golang-migrate/migrate) to handle running migrations, you can find install instructions [here](https://github.com/golang-migrate/migrate/tree/master/cli).
 
-```psql -c 'create database platform_exercise'```
+```bash
+$ psql -c 'create database platform_exercise'
+```
 
-```migrate -source file://db/migrations -database 'postgres://localhost:5432/platform_exercise?sslmode=disable' up```
+```bash
+$ migrate -source file://db/migrations -database 'postgres://localhost:5432/platform_exercise?sslmode=disable' up
+```
 
 ### Run
 
-```env PG_HOST=localhost PG_DB_NAME=platform_exercise PG_PORT=5432 JWT_KEY=fenderdigital go run application.go```
+```bash
+$ env PG_HOST=localhost PG_DB_NAME=platform_exercise PG_PORT=5432 JWT_KEY=fenderdigital go run application.go
+```
 
 ### Example Queries
 
 ### Test
 
-```go test ./...```
+```bash
+$ go test ./...
+```
 
 ## Thoughts
 
